@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_NAME=<+Main_Project+>
+PROJECT_NAME=cbap
 
 # Run the tests and count failed tests.
 function run_tests ()
