@@ -1,6 +1,19 @@
-Callback-Based Argument Parser
+                        Callback-Based Argument Parser
 
-A small library providing callback-based parser for arguments.
+A small library providing simple callback-based parser for arguments.
+
+This library is meant to be simple to use, and as such doesn't posses any
+particularly advanced features (like argument combining) that may result
+in complicating its use.
+
+General use:
+  CBAP.Register (...);    --
+  ...                     -- Register all callbacks you are interested in.
+  CBAP.Register (...);    --
+  CBAP.Process_Arguments; -- Parse all arguments, calling callbacks if argument
+                          -- associated with callback is detected.
+
+See src/cbap.ads file for more detailed description of how library behaves.
 
 ------------------------------------------------------------------------------
 --                    Copyright © 2015 darkestkhan                          --

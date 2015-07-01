@@ -23,6 +23,8 @@ with Ada.Containers.Indefinite_Vectors;
   ------------------------------------------------------------------------------
 
   ---------------------------------------------------------------------------
+  --                            U  S  A  G  E                              --
+  ---------------------------------------------------------------------------
   -- First register all callbacks you are interested in, then call
   -- Process_Arguments.
   --
@@ -90,6 +92,9 @@ package CBAP is
   -- @Called_On     : Argument for which callback is to be performed.
   -- @Argument_Type : {Value, Variable}. Value is simple argument that needs no
   --    additional parsing. Variable is argument of "Arg_Name=Some_Val" form.
+  --    When callback is triggered, Value is passed to callback as input, in
+  --    case of Variable it is content of argument after first "=" that is
+  --    passed to callback.
   -- @Case_Sensitive: Whether or not case is significant. When False all forms
   --    of argument are treated as if written in lower case.
   procedure Register
