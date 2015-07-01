@@ -73,7 +73,8 @@ package CBAP is
   package Argument_Lists is new
     Ada.Containers.Indefinite_Vectors (Positive, String);
 
-  -- List of all arguments for which callbacks where not registered.
+  -- List of all arguments (before first "--" argument) for which callbacks
+  --  where not registered.
   Unknown_Arguments : Argument_Lists.Vector := Argument_Lists.Empty_Vector;
   -- List of all arguments after first "--" argument.
   Input_Arguments   : Argument_Lists.Vector := Argument_Lists.Empty_Vector;
