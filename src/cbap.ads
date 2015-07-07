@@ -49,7 +49,8 @@ with Ada.Containers.Indefinite_Vectors;
   --
   -- If Argument_Type is Variable then callback will receive part of argument
   -- that is after "=" sign. (ie. "OS=Linux" argument would result in callback
-  -- receiving only "Linux" as its argument).
+  -- receiving only "Linux" as its argument), otherwise actual argument will be
+  -- passed.
   --
   -- For Variable, case insensitive callbacks simple rule applies:
   -- only variable name is case insensitive, with actual value (when passed to
