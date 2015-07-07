@@ -56,6 +56,10 @@ with Ada.Containers.Indefinite_Vectors;
   -- only variable name is case insensitive, with actual value (when passed to
   -- program) being unchanged.
   --
+  -- If argument for which callback is registered is passed few times
+  -- (ie. ./program help help help) then callback is triggered however many
+  -- times said argument is detected.
+  --
   -- All arguments with no associated callback are added to Unknown_Arguments
   --  vector as long as they appear before first "--" argument.
   --
