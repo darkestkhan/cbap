@@ -2,22 +2,46 @@
 
 PROJECT_NAME=cbap
 
+function actually_perform_test ()
+{
+  file="$1"
+  args="$2"
+
+  if test -x "${file}"
+  then
+    ./"${file}" ${args}
+    if test 0 -ne $?
+    then
+      echo "Failed test: ${file} ${args}"
+      return 1
+    fi
+  else
+    echo "File doesn't exist: ${file}"
+    return 1
+  fi
+}
+
+
 # Run the tests and count failed tests.
 function run_tests ()
 {
   x=0
 
-  for file in tests/bin/*
-  do
-    if test -x ${file}
-    then
-      ./${file}
-    fi
-    if test 0 -ne $?
-    then
-      x=$((x+=1))
-    fi
-  done
+  file="./tests/bin/cbap_register_error_test"
+  args=""
+  actually_perform_test "${file}" "${args}"
+  if test 0 -ne $?
+  then
+    x=$((x+=1))
+  fi
+
+  file="./tests/bin/cbap_inputs_detection"
+  args="help doing done ---- -- -- ---- doing help done"
+  actually_perform_test "${file}" "${args}"
+  if test 0 -ne $?
+  then
+    x=$((x+=1))
+  fi
 
   echo "Number of failed tests: $x"
 }
@@ -56,11 +80,9 @@ fi
 
 if test $1 = ${PROJECT_NAME}
 then
-  clean
   make
 elif test $1 = "check"
 then
-  clean
   make_tests
   run_tests
 elif test $1 = "all"
