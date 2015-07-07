@@ -26,11 +26,7 @@ procedure CBAP_Register_Error_Test is
 
   ---------------------------------------------------------------------------
 
-  procedure Cause_Error (Argument: in String)
-  is
-  begin
-    null;
-  end Cause_Error;
+  procedure Cause_Error (Argument: in String) is null;
 
   ---------------------------------------------------------------------------
 
