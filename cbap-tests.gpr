@@ -5,7 +5,9 @@ project CBAP.Tests is
   for Source_Dirs use ("tests/src");
   for Object_Dir use "tests/obj";
   for Exec_Dir use "tests/bin";
-  for Main use ("cbap_register_error_test.adb");
+  for Main use
+    ( "cbap_register_error_test.adb", "cbap_inputs_detection.adb"
+    );
 
   package Compiler is
     CPU   := ("-m64", "-mssse3", "-march=native", "-fPIC");
