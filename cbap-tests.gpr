@@ -6,7 +6,8 @@ project CBAP.Tests is
   for Object_Dir use "tests/obj";
   for Exec_Dir use "tests/bin";
   for Main use
-    ( "cbap_register_error_test.adb", "cbap_inputs_detection.adb"
+    ( "cbap_register_error_test.adb", "cbap_inputs_detection.adb",
+      "cbap_unknown_argument_detection.adb"
     );
 
   package Compiler is

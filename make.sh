@@ -43,6 +43,14 @@ function run_tests ()
     x=$((x+=1))
   fi
 
+  file="./tests/bin/cbap_unknown_argument_detection"
+  args="help doing done ---- HELP DOING DONE ------ -- -- ---- doing help done"
+  actually_perform_test "${file}" "${args}"
+  if test 0 -ne $?
+  then
+    x=$((x+=1))
+  fi
+
   echo "Number of failed tests: $x"
 }
 
