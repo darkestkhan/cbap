@@ -51,6 +51,14 @@ function run_tests ()
     x=$((x+=1))
   fi
 
+  file="./tests/bin/cbap_callback_trigger"
+  args="help -help --help HELP --HELP count -count --count CoUnT -COUNT --COunt"
+  actually_perform_test "${file}" "${args}"
+  if test 0 -ne $?
+  then
+    x=$((x+=1))
+  fi
+
   echo "Number of failed tests: $x"
 }
 
