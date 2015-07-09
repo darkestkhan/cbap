@@ -37,7 +37,7 @@ with Ada.Containers.Indefinite_Vectors;
   ---------------------------------------------------------------------------
   -- Leading single hyphen and double hyphen are stripped (if present) when
   -- processing arguments that are placed before first "--" argument,
-  -- so ie. "--help", "-help" and "help" are functionally
+  -- so e.g. "--help", "-help" and "help" are functionally
   -- equivalent, treated as if "help" was actually passed in all 3 cases.
   -- (you should register callback just for "help", if you register it for
   -- "--help" then actually passed argument would have to be "----help" in order
@@ -59,6 +59,11 @@ with Ada.Containers.Indefinite_Vectors;
   -- If argument for which callback is registered is passed few times
   -- (ie. ./program help help help) then callback is triggered however many
   -- times said argument is detected.
+  --
+  -- NOTE that Check for case insensitive callback is being performed first,
+  --  thus if you happen to register callback for "help" (case insensitive) and
+  --  "HeLp" (case sensitive) then only the case insensitive one will be called
+  --  (i.e. "help").
   --
   -- All arguments with no associated callback are added to Unknown_Arguments
   --  vector as long as they appear before first "--" argument.
