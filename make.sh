@@ -25,49 +25,39 @@ function actually_perform_test ()
 # Run the tests and count failed tests.
 function run_tests ()
 {
-  x=0
+  Error_Count=0
 
-  file="./tests/bin/cbap_register_error_test"
-  args=""
-  actually_perform_test "${file}" "${args}"
-  if test 0 -ne $?
-  then
-    x=$((x+=1))
-  fi
+  # Even index contains test binary
+  # Odd indexes contain arguments to $((Index - 1)) test
+  Tests_Args_Array=(
+    "cbap_register_error_test"
+    ""
+    "cbap_inputs_detection"
+    "help doing done ---- -- -- ---- doing help done"
+    "cbap_unknown_argument_detection"
+    "help doing done ---- HELP DOING DONE ------ -- -- ---- doing help done"
+    "cbap_callback_trigger"
+    "help -help --help HELP --HELP count -count --count CoUnT -COUNT --COunt"
+    "cbap_variable_detection"
+    "help insensitive insensitive=TruE --SENSITIVE=true -- sensitive"
+  )
 
-  file="./tests/bin/cbap_inputs_detection"
-  args="help doing done ---- -- -- ---- doing help done"
-  actually_perform_test "${file}" "${args}"
-  if test 0 -ne $?
-  then
-    x=$((x+=1))
-  fi
+  K=0
 
-  file="./tests/bin/cbap_unknown_argument_detection"
-  args="help doing done ---- HELP DOING DONE ------ -- -- ---- doing help done"
-  actually_perform_test "${file}" "${args}"
-  if test 0 -ne $?
-  then
-    x=$((x+=1))
-  fi
+  while test $K -lt ${#Tests_Args_Array[*]}
+  do
+    file="./tests/bin/${Tests_Args_Array[$K]}"
+    K=$((K+=1))
+    args="${Tests_Args_Array[$K]}"
+    K=$((K+=1))
+    actually_perform_test "${file}" "${args}"
+    if test 0 -ne $?
+    then
+      Error_Count=$((Error_Count+=1))
+    fi
+  done
 
-  file="./tests/bin/cbap_callback_trigger"
-  args="help -help --help HELP --HELP count -count --count CoUnT -COUNT --COunt"
-  actually_perform_test "${file}" "${args}"
-  if test 0 -ne $?
-  then
-    x=$((x+=1))
-  fi
-
-  file="./tests/bin/cbap_variable_detection"
-  args="help insensitive insensitive=TruE --SENSITIVE=true -- sensitive"
-  actually_perform_test "${file}" "${args}"
-  if test 0 -ne $?
-  then
-    x=$((x+=1))
-  fi
-
-  echo "Number of failed tests: $x"
+  echo "Number of failed tests: ${Error_Count}"
 }
 
 # Build the library
