@@ -9,7 +9,8 @@ project CBAP.Tests is
     ( "cbap_register_error_test.adb",
       "cbap_inputs_detection.adb",
       "cbap_unknown_argument_detection.adb",
-      "cbap_callback_trigger.adb"
+      "cbap_callback_trigger.adb",
+      "cbap_variable_detection.adb"
     );
 
   package Compiler is
