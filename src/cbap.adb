@@ -127,9 +127,13 @@ package body CBAP is
 
     function Extract_Value  (Item: in String) return String
     is
+      Pos: constant Natural := Ada.Strings.Fixed.Index (Item, "=", Item'First);
     begin
-      return Item
-        (Ada.Strings.Fixed.Index (Item, "=", Item'First) + 1 .. Item'Last);
+      if Pos = Item'Last then
+        return ""; -- in case: "variable="
+      else
+        return Item (Pos + 1 .. Item'Last);
+      end if;
     end Extract_Value;
 
     ---------------------------------------------------------------------------
@@ -139,61 +143,54 @@ package body CBAP is
       Dummy_Callback  : Callback_Data := Empty_Callback_Data;
       Actual_Callback : Callback_Data := Empty_Callback_Data;
     begin
-      -- Check for case insensitive value callback
-      Dummy_Callback.Hash := Ada.Strings.Hash (To_Lower (Item));
-      if Callback_Set.Contains (Dummy_Callback) then
-        Actual_Callback :=
-          Callback_Sets.Element (Callback_Set.Find (Dummy_Callback));
+      Case_Check: -- loop over case sensitiviness
+      for Case_Sensitive in Boolean'Range loop
 
-        if not (Actual_Callback.Case_Sensitive) and
-          Actual_Callback.Arg_Type = Value
-        then
-          Actual_Callback.Callback (Item);
-          return;
-        end if;
-      end if;
+        Arg_Type_Check: -- loop over argument type
+        for Arg_Type in Argument_Types'Range loop
+          if Arg_Type = Value then
+            if Case_Sensitive then
+              Dummy_Callback.Hash := Ada.Strings.Hash (Item);
+            else
+              Dummy_Callback.Hash := Ada.Strings.Hash (To_Lower (Item));
+            end if;
+          else -- For Variable we need to need to hash name ONLY
+            if Case_Sensitive then
+              Dummy_Callback.Hash := Ada.Strings.Hash (Extract_Name (Item));
+            else
+              Dummy_Callback.Hash := Ada.Strings.Hash
+                (Extract_Name (To_Lower (Item)));
+            end if;
+          end if;
 
-      -- Check for case sensitive value callback
-      Dummy_Callback.Hash := Ada.Strings.Hash (Item);
-      if Callback_Set.Contains (Dummy_Callback) then
-        Actual_Callback :=
-          Callback_Sets.Element (Callback_Set.Find (Dummy_Callback));
+          if Callback_Set.Contains (Dummy_Callback) then
+            Actual_Callback :=
+              Callback_Sets.Element (Callback_Set.Find (Dummy_Callback));
 
-        if Actual_Callback.Arg_Type = Value and
-          Actual_Callback.Case_Sensitive
-        then
-          Actual_Callback.Callback (Item);
-          return;
-        end if;
-      end if;
-
-      -- Check for case insensitive variable callback
-      Dummy_Callback.Hash := Ada.Strings.Hash (To_Lower (Extract_Name (Item)));
-      if Callback_Set.Contains (Dummy_Callback) then
-        Actual_Callback :=
-          Callback_Sets.Element (Callback_Set.Find (Dummy_Callback));
-
-        if not (Actual_Callback.Case_Sensitive) and
-          Actual_Callback.Arg_Type = Variable
-        then
-          Actual_Callback.Callback (Extract_Value (Item));
-          return;
-        end if;
-      end if;
-
-      -- Check for case sensitive variable callback
-      Dummy_Callback.Hash := Ada.Strings.Hash (Extract_Name (Item));
-      if Callback_Set.Contains (Dummy_Callback) then
-        Actual_Callback :=
-          Callback_Sets.Element (Callback_Set.Find (Dummy_Callback));
-
-        if Actual_Callback.Arg_Type = Variable and
-          Actual_Callback.Case_Sensitive
-        then
-          Actual_Callback.Callback (Extract_Value (Item));
-          return;
-        end if;
-      end if;
+            if Actual_Callback.Case_Sensitive = Case_Sensitive and
+               Actual_Callback.Arg_Type = Arg_Type
+            then
+              if Arg_Type = Value then
+                Actual_Callback.Callback (Item);
+                return;
+              else -- Special circuitry for Variable type
+                declare
+                  Pos: constant Natural :=
+                    Ada.Strings.Fixed.Index (Item, "=", Item'First);
+                begin
+                  if Pos = 0 then
+                    Unknown_Arguments.Append (Item);
+                    return;
+                  else
+                    Actual_Callback.Callback (Extract_Value (Item));
+                    return;
+                  end if;
+                end;
+              end if;
+            end if;
+          end if; -- Callback_Set.Contains
+        end loop Arg_Type_Check;
+      end loop Case_Check;
 
       -- No callback associated with argument has been found.
       Unknown_Arguments.Append (Item);
