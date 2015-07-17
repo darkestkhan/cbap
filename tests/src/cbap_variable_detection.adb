@@ -56,6 +56,18 @@ procedure CBAP_Variable_Detection is
 
   ---------------------------------------------------------------------------
 
+  procedure Edge_Case (Variable: in String)
+  is
+  begin
+    if Variable /= "" then
+      Ada.Text_IO.Put_Line
+        ( Ada.Text_IO.Standard_Error, "Failed at Edge_Case" );
+      Error_Count := Error_Count + 1;
+    end if;
+  end Edge_Case;
+
+  ---------------------------------------------------------------------------
+
 begin
   CBAP.Register
     ( Case_Insensitive'Unrestricted_Access,
@@ -65,6 +77,8 @@ begin
     );
   CBAP.Register
     ( Case_Sensitive'Unrestricted_Access, "SENSITIVE", CBAP.Variable );
+  CBAP.Register
+    ( Edge_Case'Unrestricted_Access, "edge", CBAP.Variable );
   CBAP.Process_Arguments;
 
   if Error_Count /= 0 then

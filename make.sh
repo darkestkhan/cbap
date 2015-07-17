@@ -39,7 +39,7 @@ function run_tests ()
     "cbap_callback_trigger"
     "help -help --help HELP --HELP count -count --count CoUnT -COUNT --COunt"
     "cbap_variable_detection"
-    "help insensitive insensitive=TruE --SENSITIVE=true -- sensitive"
+    "help insensitive edge= insensitive=TruE --SENSITIVE=true -- insensitive sensitive"
   )
 
   K=0
